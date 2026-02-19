@@ -1,0 +1,6 @@
+[run]
+omit =
+    taxcalc/calcfunctions.py
+    taxcalc/cli/*
+    taxcalc/tests/*
+    taxcalc/validation/*

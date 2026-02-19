@@ -1,0 +1,7 @@
+include taxcalc/consumption.json
+include taxcalc/cps.csv.gz
+include taxcalc/cps_weights.csv.gz
+include taxcalc/growdiff.json
+include taxcalc/growfactors.csv
+include taxcalc/policy_current_law.json
+include taxcalc/records_variables.json
