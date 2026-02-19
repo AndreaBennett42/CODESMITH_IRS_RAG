@@ -1,0 +1,29 @@
+{
+    "name": "Tax-Calculator",
+    "img": "",
+    "banner_title": "Tax-Calculator",
+    "banner_subtitle": "USA Federal Individual Income and Payroll Tax Microsimulation Model",
+    "detailed_description": "Tax-Calculator is an open-source microsimulation model for static analysis of USA federal income and payroll taxes.",
+    "policy_area": "Tax Microsimulation, Revenue Estimation, Distributional Analysis",
+    "geography": "United States",
+    "language": "Python",
+    "maintainers": [
+        {
+            "name": "Jason DeBacker",
+            "image": "https://github.com/jdebacker.png",
+            "link": "https://github.com/jdebacker"
+        },
+        {
+            "name": "Matthew Jensen",
+            "image": "https://avatars.githubusercontent.com/u/8301092?v=4",
+            "link": "https://github.com/MattHJensen/"
+        }
+    ],
+    "links": {
+      "code_repository": "https://github.com/PSLmodels/Tax-Calculator",
+      "user_documentation": "https://taxcalc.pslmodels.org/",
+      "contributor_documentation": "https://taxcalc.pslmodels.org/contributing/contributor_guide.html",
+      "webapp": "",
+      "recent_changes": "https://taxcalc.pslmodels.org/about/releases.html"
+    }
+}

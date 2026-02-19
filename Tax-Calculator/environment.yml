@@ -1,0 +1,26 @@
+name: taxcalc-dev
+channels:
+  - conda-forge
+dependencies:
+- "python>=3.11, <3.14"
+- "numpy>=1.26"
+- "pandas>=2.2"
+- "bokeh>=3.7"
+- numba
+- curl
+- setuptools
+- pytest
+- pytest-xdist
+- pytest-asyncio
+- requests
+- aiohttp
+- pycodestyle
+- pylint
+- coverage
+- behresp
+- openpyxl
+- pip
+- pip:
+    - "jupyter-book<2.0"
+    - "paramtools>=0.20.0"
+    - "mcp[cli]"
