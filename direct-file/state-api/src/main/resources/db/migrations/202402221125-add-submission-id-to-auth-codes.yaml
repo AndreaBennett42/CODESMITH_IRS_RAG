@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: auth-codes-add-submission-id-column
+      author: abcde
+      changes:
+        - addColumn:
+            tableName: authorization_code
+            columns:
+              - column:
+                  name: submission_id
+                  type: varchar(20)
+                  constraints:
+                    nullable: true

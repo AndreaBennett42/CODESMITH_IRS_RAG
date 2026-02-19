@@ -1,0 +1,15 @@
+{
+  "key": "publish_submission_confirmations",
+  "payload": {
+    "taxReturnSubmissionReceiptInformations": [
+      {
+        "submissionId": "submissionId1",
+        "receiptId": "receiptId1"
+      },
+      {
+        "submissionId": "submissionId2",
+        "receiptId": "receiptId2"
+      }
+    ]
+  }
+}

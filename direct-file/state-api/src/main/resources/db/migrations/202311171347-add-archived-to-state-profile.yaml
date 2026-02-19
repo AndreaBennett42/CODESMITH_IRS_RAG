@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: state-profile-addColumn-archived
+      author: abcde
+      changes:
+        - addColumn:
+            tableName: state_profile
+            columns:
+              - column:
+                  name: archived
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false

@@ -1,0 +1,10 @@
+@use '@irs/df-common/src/styles/uswds-theme' as *;
+
+.description-term {
+  font-weight: bold;
+}
+
+.description-definition {
+  margin-left: 0;
+  margin-bottom: units(2);
+}

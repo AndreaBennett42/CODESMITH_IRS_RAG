@@ -1,0 +1,14 @@
+<FactDictionaryModule>
+  <Facts>
+    <Fact path="/rejectMe">
+      <Name>Reject Me</Name>
+      <Description>A fact, which, if true, will cause the backend to reject</Description>
+      <BlockSubmissionOnTrue />
+
+
+      <Writable>
+        <Boolean />
+      </Writable>
+    </Fact>
+  </Facts>
+</FactDictionaryModule>
