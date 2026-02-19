@@ -1,0 +1,4 @@
+**/application-local.*
+.env*
+.git/
+Dockerfile*

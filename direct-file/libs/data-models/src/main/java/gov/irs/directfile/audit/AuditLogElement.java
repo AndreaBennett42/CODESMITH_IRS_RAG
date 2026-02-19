@@ -1,0 +1,30 @@
+package gov.irs.directfile.audit;
+
+public enum AuditLogElement {
+    cyberOnly,
+    detail,
+    email,
+    eventErrorMessage,
+    eventId,
+    eventStatus,
+    eventType,
+    mefReceiptId,
+    mefSubmissionId,
+    mftCode,
+    remoteAddress,
+    requestMethod,
+    requestUri,
+    responseStatusCode,
+    sadiUserUuid,
+    system,
+    taxPeriod,
+    taxReturnId,
+    tinType,
+    timestamp,
+    userInputTin,
+    userTin,
+    userTinType,
+    userType,
+    errorFactGraph,
+    errorGeneratedXml
+}

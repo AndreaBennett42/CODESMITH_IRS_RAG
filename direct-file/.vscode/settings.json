@@ -1,0 +1,10 @@
+{
+    "xml.format.maxLineWidth": 120,
+    "[xml]": {
+        "editor.defaultFormatter": "redhat.vscode-xml",
+        "editor.tabSize": 2
+    },
+    "files.watcherExclude": {
+        "**/target": true
+    },
+}

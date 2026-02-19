@@ -1,0 +1,5 @@
+**/application-local.*
+/src/main/java/gov/irs/directfile/submit/xml
+.env*
+.git/
+Dockerfile*

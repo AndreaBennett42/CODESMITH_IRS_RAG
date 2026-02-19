@@ -1,0 +1,4 @@
+### docker-related ###
+/db/postgres/data
+/mef-apps-db/postgres/data
+/localstack/volume/cache
