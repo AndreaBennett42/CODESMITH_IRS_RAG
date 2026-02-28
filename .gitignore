@@ -1,2 +1,6 @@
 
 .rag_cache/
+.venv_ai/
+__pycache__/
+*.pyc
+.DS_Store
