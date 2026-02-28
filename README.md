@@ -1,6 +1,6 @@
 # CODESMITH IRS Project (Hybrid RAG)
 
-Hybrid script runs a 3-search flow over your code dataset and fact graph.
+Hybrid script runs a 3-search flow over your codebase and fact graph.
 
 ## Quick Start
 ```bash
