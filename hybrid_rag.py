@@ -607,6 +607,7 @@ def _build_intent_signal_tokens(keywords: List[str]) -> Set[str]:
     # Keep high-signal intent tokens; suppress generic audit language.
     generic = {
         "find", "logic", "related", "including", "regarding", "about",
+        "guidance", "under",
         "deduction", "deductions", "qualified", "transition", "relief",
         "section", "sec", "form", "information", "reporting",
     }
@@ -743,6 +744,7 @@ def _query_signal_terms_for_findings(query: str) -> Set[str]:
     stop = {
         "find", "logic", "related", "including", "regarding", "about", "the", "and", "for", "with",
         "from", "that", "this", "what", "how", "does", "are", "is", "to", "of", "in", "on", "a", "an", "it",
+        "guidance", "under", "section", "sec", "information", "reporting",
     }
     terms = [t for t in tokenize(query) if len(t) >= 3 and t not in stop and t not in {"section", "sec"}]
     return set(terms)
@@ -750,7 +752,7 @@ def _query_signal_terms_for_findings(query: str) -> Set[str]:
 
 def _build_citation_derived_key_findings(query: str, vector_hits: List[Dict], graph_hits: List[Dict]) -> List[str]:
     q_terms = _query_signal_terms_for_findings(query)
-    candidates: List[Tuple[int, float, str]] = []
+    candidates: List[Tuple[int, float, str, str, str]] = []
 
     for h in vector_hits:
         ref = f"{h.get('path','-')}:L{h.get('line_start',1)}-L{h.get('line_end',1)}"
@@ -761,7 +763,8 @@ def _build_citation_derived_key_findings(query: str, vector_hits: List[Dict], gr
             continue
         src = "Tax-Calculator" if h.get("source") == "tax_calculator" else "Direct File"
         note = f'- [{src}] `{ref}` overlap_terms={", ".join(overlap[:6])}'
-        candidates.append((ov, float(h.get("score", 0.0)), note))
+        dedup_key = h.get('path', ref)
+        candidates.append((ov, float(h.get("score", 0.0)), src, dedup_key, note))
 
     for n in graph_hits:
         ref = n.get("source_ref", "-")
@@ -771,27 +774,71 @@ def _build_citation_derived_key_findings(query: str, vector_hits: List[Dict], gr
         if ov <= 0:
             continue
         note = f'- [Fact Graph] `{n.get("path","-")}` ({ref}) overlap_terms={", ".join(overlap[:6])}'
-        candidates.append((ov, float(n.get("score", 0.0)), note))
+        dedup_key = n.get('path', ref)
+        candidates.append((ov, float(n.get("score", 0.0)), "Fact Graph", dedup_key, note))
 
     candidates.sort(key=lambda x: (x[0], x[1]), reverse=True)
     if not candidates:
         return ["- No citation-derived findings met relevance threshold."]
-    seen: Set[str] = set()
+
     out: List[str] = []
-    for _, _, line in candidates:
-        if line in seen:
+    seen_lines: Set[str] = set()
+    seen_keys: Set[str] = set()
+    seen_sources: Set[str] = set()
+
+    for _, _, src, dedup_key, line in candidates:
+        if dedup_key in seen_keys or line in seen_lines:
             continue
-        seen.add(line)
         out.append(line)
+        seen_lines.add(line)
+        seen_keys.add(dedup_key)
+        seen_sources.add(src)
         if len(out) >= 5:
             break
-    return out
+
+    # If Direct File has relevant evidence but was crowded out by Tax-Calculator,
+    # give one strong Direct File finding a place in the final list.
+    if "Direct File" not in seen_sources:
+        for ov, score, src, dedup_key, line in candidates:
+            if src != "Direct File":
+                continue
+            if dedup_key in seen_keys or line in seen_lines:
+                continue
+            if ov < 2:
+                continue
+            if len(out) >= 5:
+                out.pop()
+            out.append(line)
+            seen_lines.add(line)
+            seen_keys.add(dedup_key)
+            seen_sources.add(src)
+            break
+
+    if len(out) < 5:
+        for _, _, src, dedup_key, line in candidates:
+            if dedup_key in seen_keys or line in seen_lines:
+                continue
+            if src in seen_sources and src != "Fact Graph":
+                continue
+            out.append(line)
+            seen_lines.add(line)
+            seen_keys.add(dedup_key)
+            seen_sources.add(src)
+            if len(out) >= 5:
+                break
+
+    return out[:5]
 
 
 def _build_deterministic_high_conf_refs(vector_hits: List[Dict], graph_hits: List[Dict]) -> List[str]:
     refs: List[str] = []
     seen: Set[str] = set()
+    seen_vector_paths: Set[str] = set()
     for h in sorted(vector_hits, key=lambda x: float(x.get("score", 0.0)), reverse=True):
+        path = h.get("path", "-")
+        if path in seen_vector_paths:
+            continue
+        seen_vector_paths.add(path)
         ref = f"{h.get('path','-')}:L{h.get('line_start',1)}-L{h.get('line_end',1)}"
         line = f"- `{ref}`"
         if line not in seen:
@@ -884,7 +931,7 @@ def _canonicalize_report_sections(text: str) -> str:
         out_lines.append(f"**{h}**")
         if sections[h]:
             out_lines.extend(sections[h])
-        else:
+        elif h != "Evidence Gaps":
             out_lines.append("- Not provided.")
         out_lines.append("")
     return "\n".join(out_lines).strip()
@@ -1003,7 +1050,7 @@ def enforce_claim_alignment(
     if gap_notes:
         gap_lines = [f"- {g}" for g in dict.fromkeys(gap_notes)]
     else:
-        gap_lines = ["- No explicit evidence gaps detected from current checks."]
+        gap_lines = []
     out = _replace_section_block(out, "Evidence Gaps", gap_lines)
 
     return _canonicalize_report_sections(out)
