@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PROJECT_ROOT="/Users/andreabennett/CS/CODESMITH_IRS_PROJECT"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$SCRIPT_DIR"
 EXPECTED_VENV="$PROJECT_ROOT/.venv_ai"
 EXPECTED_PY="$EXPECTED_VENV/bin/python"
 

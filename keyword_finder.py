@@ -51,5 +51,5 @@ def map_keywords_in_code(keywords, project_path):
 
 # Example usage for your IRS project
 tax_keywords = ["StandardDeduction", "FilingStatus", "Blind", "Age65", "Dependents"]
-project_path = "/Users/andreabennett/CS/CODESMITH_IRS_PROJECT/Tax-Calculator"
+project_path = os.path.join(os.path.dirname(__file__), "Tax-Calculator")
 findings = map_keywords_in_code(tax_keywords, project_path)
